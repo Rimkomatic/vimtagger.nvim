@@ -59,6 +59,55 @@ M.search_tagged_files = function()
 		:find()
 end
 
+M.infused_find_files = function()
+	local builtin = require("telescope.builtin")
+	local current_state = state.get_state()
+
+	-- We wrap Telescope's native find_files engine
+	builtin.find_files({
+		prompt_title = "Find Files (Tag Infused)",
+		entry_maker = function(filepath)
+			-- Convert the relative path from ripgrep/fd to an absolute path
+			local abs_path = vim.fn.fnamemodify(filepath, ":p")
+			local tags = current_state.forward[abs_path]
+
+			-- BASE CASE: If the file has no tags, render it as a completely normal file
+			if not tags then
+				return {
+					value = filepath,
+					display = filepath,
+					ordinal = filepath,
+					path = abs_path,
+				}
+			end
+
+			-- TAGGED CASE: If tags exist, build the prefix and colorize it!
+			local tag_list = {}
+			for tag, _ in pairs(tags) do
+				table.insert(tag_list, tag)
+			end
+			table.sort(tag_list)
+
+			local tag_prefix = "[" .. table.concat(tag_list, ", ") .. "]"
+			local display_str = tag_prefix .. " " .. filepath
+
+			-- Inject the tags into the ordinal so you can fuzzy-find by tag OR filepath
+			local ordinal_str = table.concat(tag_list, " ") .. " " .. filepath
+
+			return {
+				value = filepath,
+				display = function()
+					return display_str, {
+						{ { 0, #tag_prefix }, "TelescopeResultsIdentifier" },
+					}
+				end,
+				ordinal = ordinal_str,
+				path = abs_path,
+			}
+		end,
+	})
+end
+
 M.setup = function(opts)
 	local plugin_opts = opts or {}
 
@@ -72,6 +121,18 @@ M.setup = function(opts)
 	vim.api.nvim_create_user_command("TagSearch", function()
 		if plugin_opts.is_vimtagger_initiated() then
 			M.search_tagged_files()
+		else
+			print("vimtagger not initiated")
+		end
+	end, {})
+
+	vim.api.nvim_create_user_command("TagFindFiles", function()
+		if plugin_opts.is_vimtagger_initiated() then
+			if next(state.get_state().forward) == nil then
+				state.read_state()
+			end
+
+			M.infused_find_files()
 		else
 			print("vimtagger not initiated")
 		end
