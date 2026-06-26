@@ -11,7 +11,7 @@
 *  Tags are stored per project.
 *  Fast lookups using an inverted index.
 *  Includes tools to inspect and validate the tag database.
-*  Written entirely in Lua.
+*  A Pane to check tags, rename and files associated with tags
 
 ---
 
@@ -66,6 +66,13 @@ Search files by tag.
 :TagFindFiles
 ```
 
+Open the panel to edit tags, files etc 
+
+```vim
+:TagTogglePane
+```
+
+
 ---
 
 ## Commands
@@ -80,6 +87,7 @@ Search files by tag.
 | `:TagFindFiles`    | Find files matching selected tags.                   |
 | `:TagDoctor`       | Check the tag database for inconsistencies.          |
 | `:ReadTaggerfile`  | Reload the tag database from disk.                   |
+| `:TagTogglePane`  | Load a pane to delete/edit tags                   |
 
 ---
 
@@ -150,6 +158,5 @@ Each project is represented by a single JSON file.
 :TagAdd database
 
 :TagFindFiles
+:TagTogglePane
 ```
-
-Select one or more tags and Telescope will display the matching files.

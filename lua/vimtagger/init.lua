@@ -31,6 +31,12 @@ function M.setup(opts)
 	require("vimtagger.search").setup({
 		is_vimtagger_initiated = M.is_vimtagger_initiated,
 	})
+
+	require("vimtagger.panel").setup({
+		is_vimtagger_initiated = function()
+			return true
+		end,
+	})
 end
 
 return M

@@ -2,10 +2,6 @@ local state = require("vimtagger.state")
 local plugin_opts = {}
 local ui = require("vimtagger.ui")
 
--- local read_value_for_file = function(filename)
---     return data
--- end
-
 local add_tag = function(tagname)
 	local filename = vim.api.nvim_buf_get_name(0)
 
@@ -90,11 +86,8 @@ local get_available_tags_for_file = function()
 	for tag, _ in pairs(current_state.inverted) do
 		if not current_state.forward[filename] or not current_state.forward[filename][tag] then
 			table.insert(available_tags, tag)
-			print(tag)
 		end
 	end
-
-	-- print(vim.inspect(current_state.forward[filename]))
 
 	table.sort(available_tags)
 	return available_tags

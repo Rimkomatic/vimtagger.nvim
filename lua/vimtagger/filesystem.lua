@@ -46,10 +46,6 @@ end
 
 local M = {}
 
-function M.hello()
-	print("Hello from my plugin!")
-end
-
 M.setup = function()
 	vim.api.nvim_create_user_command("GetSHA", function()
 		print(get_encoded_filename())
