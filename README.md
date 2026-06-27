@@ -3,6 +3,7 @@
 
 > A simple, project-local file tagging plugin for Neovim with Telescope integration.
 
+https://github.com/user-attachments/assets/cb79bf9a-1143-45bb-892f-01ad7151ce61
 
 ## Features
 
